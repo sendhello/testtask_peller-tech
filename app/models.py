@@ -37,7 +37,7 @@ class User(UserMixin, db.Model):
 class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True, unique=True)
-    posts = db.relationship('Question', backref='test', lazy='dynamic')
+    questions = db.relationship('Question', backref='test', lazy='dynamic')
 
     def __repr__(self):
         return '<Test {}>'.format(self.name)

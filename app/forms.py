@@ -33,3 +33,8 @@ class RegistrationForm(FlaskForm):
 class CreateTestForm(FlaskForm):
     name = StringField('Название нового опроса', validators=[DataRequired()])
     submit = SubmitField('Создать')
+
+
+class CreateQuetionForm(FlaskForm):
+    content = StringField('Вопрос', validators=[DataRequired()])
+    submit = SubmitField('Создать')

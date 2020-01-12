@@ -2,11 +2,15 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>Редактирование опроса</h1>
+    <h3>Список вопросов:</h3>
+    <ul class="list-group">
+        {% for question in questions %}
+            <li class="list-group-item">
+                <h4>{{ question.content }}</h4>
+            <a class="btn btn-primary" href="{{ url_for('create_question', test_id=test_id) }}">Редактировать</a>
+            </li>
+        {% endfor %}
+    </ul>
 
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
+    <a class="btn btn-lg btn-primary" href="{{ url_for('create_question', test_id=test_id) }}">Добавить новый вопрос</a>
 {% endblock %}

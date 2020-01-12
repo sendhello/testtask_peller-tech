@@ -2,7 +2,7 @@
 
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, CreateTestForm
+from app.forms import LoginForm, RegistrationForm, CreateTestForm, CreateQuetionForm
 from flask_login import current_user, login_user, logout_user
 from app.models import User, Test, Question, Answer
 from flask_login import login_required
@@ -66,8 +66,29 @@ def create_test():
         db.session.commit()
         flash(f'Создан новый опрос "{form.name.data}"!')
         return redirect(url_for('index'))
-    return render_template('create-test.html', title='Create new test', form=form)
+    return render_template('create-test.html', title='Создание нового опроса', form=form)
 
+
+@app.route('/edit-test')
+@login_required
+def edit_test():
+    test_id = request.args.get('test_id')
+    questions = Question.query.filter_by(test_id=test_id)
+    return render_template('edit-test.html', title='Редактирование опроса', questions=questions, test_id=test_id)
+
+
+@app.route('/create-question', methods=['GET', 'POST'])
+@login_required
+def create_question():
+    form = CreateQuetionForm()
+    test_id = request.args.get('test_id')
+    if form.validate_on_submit():
+        question = Question(content=form.content.data, test_id=test_id)
+        db.session.add(question)
+        db.session.commit()
+        flash(f'Создан новый вопрос "{form.content.data}"!')
+        return redirect(url_for('edit_test', test_id=test_id))
+    return render_template('create-question.html', title='Создание нового вопроса', form=form)
 
 @app.errorhandler(404)
 def page_not_found(e):
