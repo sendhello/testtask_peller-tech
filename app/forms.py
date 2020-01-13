@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
+from wtforms.widgets import TextArea
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
+from config import Config
 
 
 class LoginForm(FlaskForm):
@@ -36,5 +38,11 @@ class CreateTestForm(FlaskForm):
 
 
 class CreateQuetionForm(FlaskForm):
-    content = StringField('Вопрос', validators=[DataRequired()])
-    submit = SubmitField('Создать')
+    content = StringField('Вопрос', validators=[DataRequired()], widget=TextArea())
+    answer1 = StringField('Вариант 1', validators=[DataRequired()])
+    answer2 = StringField('Вариант 2', validators=[DataRequired()])
+    answer3 = StringField('Вариант 3')
+    answer4 = StringField('Вариант 4')
+    ready = RadioField(
+        'Правильный ответ', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4')])
+    submit = SubmitField('Добавить вопрос')

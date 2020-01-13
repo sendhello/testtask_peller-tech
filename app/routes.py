@@ -86,9 +86,19 @@ def create_question():
         question = Question(content=form.content.data, test_id=test_id)
         db.session.add(question)
         db.session.commit()
+
+        answers = {'1': None, '2': None, '3': None, '4': None}
+        for answer_number in answers:
+            is_ready = True if answer_number == form.ready.data else False
+            content = getattr(form, f'answer{answer_number}').data
+            if content:
+                answers[answer_number] = Answer(content=content, question_id=question.id, is_ready=is_ready)
+                db.session.add(answers[answer_number])
+        db.session.commit()
         flash(f'Создан новый вопрос "{form.content.data}"!')
         return redirect(url_for('edit_test', test_id=test_id))
     return render_template('create-question.html', title='Создание нового вопроса', form=form)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
